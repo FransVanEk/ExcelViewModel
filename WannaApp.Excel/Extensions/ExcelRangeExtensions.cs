@@ -154,10 +154,6 @@ namespace WannaApp.Excel.Extensions
             return range;
         }
 
-        public static ExcelRange AutoFit(this ExcelRange range)
-        {
-            range.GetInteropVersion().AutoFit();
-            return range;
-        }
+    
     }
 }
