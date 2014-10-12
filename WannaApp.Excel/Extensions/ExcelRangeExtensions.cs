@@ -147,5 +147,17 @@ namespace WannaApp.Excel.Extensions
             range.GetInteropVersion().NumberFormat = format;
             return range;
         }
+
+        public static ExcelRange Width(this ExcelRange range, int widthInPoints)
+        {
+            range.GetInteropVersion().ColumnWidth = widthInPoints;
+            return range;
+        }
+
+        public static ExcelRange AutoFit(this ExcelRange range)
+        {
+            range.GetInteropVersion().AutoFit();
+            return range;
+        }
     }
 }
