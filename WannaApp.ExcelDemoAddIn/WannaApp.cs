@@ -175,7 +175,7 @@ namespace WannaApp.ExcelDemoAddIn
         private int GetMaxValueDynamicInts(IEnumerable<Models.BaseModel> data)
         {
             return data.Where(d => d.DynamicInts != null && d.DynamicInts.Count > 0) 
-                .Select(d => d.DynamicInts.Where(di => di !=null).Max()).Max();
+                .Select(d => d.DynamicInts.Max()).Max();
         }
 
        
