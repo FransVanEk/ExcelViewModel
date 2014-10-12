@@ -141,5 +141,11 @@ namespace WannaApp.Excel.Extensions
             range.GetInteropVersion().Value2 = value;
             return range;
         }
+
+        public static ExcelRange Format(this ExcelRange range, string format)
+        {
+            range.GetInteropVersion().NumberFormat = format;
+            return range;
+        }
     }
 }
