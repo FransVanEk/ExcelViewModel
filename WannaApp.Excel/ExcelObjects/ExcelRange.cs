@@ -6,6 +6,8 @@ namespace WannaApp.Excel.ExcelObjects
     public class ExcelRange : ExcelBaseObject , IDisposable
     {
         private Range _range;
+        const int xLengthIndex = 1;
+        const int yLengthIndex = 0;
 
         public ExcelRange(Range range)
         {

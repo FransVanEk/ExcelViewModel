@@ -26,6 +26,10 @@ namespace WannaApp.Excel.DemoAdd_in
             var list2 = workbook.FindOrCreateWorksheet("Basic_Usage").CreateListObject("G1", GetData(), "Second_listObject");
             var list3 = workbook.FindOrCreateWorksheet("Basic_Usage_2").CreateListObject("A1", GetData(), "Third__ListObject");
 
+            list3.GetDataRangeFor("a").BackgroundColor(Color.Red);
+            list3.GetDataRangeFor("a", "D").Font(6);
+            list2.GetDataRangeFor(2, 3).Orientation(45);
+
             list.TableStyle("TableStyleLight12");
         }
 
@@ -109,7 +113,8 @@ namespace WannaApp.Excel.DemoAdd_in
             var validValuesRange2 = worksheet.GetRange("A10").WriteValuesHorizontally(new List<string> { "Yes", "No", "Sometimes" });
             var validValuesRange3 = worksheet.GetRange("D10").WriteData(GetDataValues());
 
-
+            validValuesRange3.GetColumnsFromRange(2, 3).BackgroundColor(Color.Azure);
+            
             worksheet.GetRange("B1").Validation("=A1:A3");
             worksheet.GetRange("C1").Validation(validValuesRange);
         }

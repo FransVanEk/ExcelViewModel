@@ -26,20 +26,21 @@ namespace WannaApp.Excel.Extensions
         public static ExcelRange WriteData(this ExcelRange range, object[,] data)
         {
             var result = range;
-            if(isRangeSizeValid(range,data) == false) {
+            if (isRangeSizeValid(range, data) == false)
+            {
                 result = range.GetRangeForSize(data.GetLength(yLengthIndex), data.GetLength(xLengthIndex));
-            } 
+            }
             result.SetValue(data);
             return result;
         }
 
         public static ExcelRange GetRangeForSize(this ExcelRange range, int numberOrRows, int numberOfColumns)
-    {
-        Range topLeft = range.GetLeftTopCell().GetInteropVersion();
-        return range.ExtendRangeSize(numberOrRows-1, numberOfColumns-1);
-    }
+        {
+            Range topLeft = range.GetLeftTopCell().GetInteropVersion();
+            return range.ExtendRangeSize(numberOrRows - 1, numberOfColumns - 1);
+        }
 
-        public static ExcelRange WriteData(this ExcelRange range,IListObjectDataObject data)
+        public static ExcelRange WriteData(this ExcelRange range, IListObjectDataObject data)
         {
             range.GetInteropVersion().Value2 = data.AllValues;
             return range;
@@ -49,9 +50,9 @@ namespace WannaApp.Excel.Extensions
         {
             Worksheet currentWorksheet = range.GetInteropVersion().Worksheet;
             var result = currentWorksheet.ListObjects.Add(XlListObjectSourceType.xlSrcRange,
-                                            range.GetInteropVersion(), 
-                                            System.Type.Missing, 
-                                            XlYesNoGuess.xlYes, 
+                                            range.GetInteropVersion(),
+                                            System.Type.Missing,
+                                            XlYesNoGuess.xlYes,
                                             System.Type.Missing);
             result.Name = tableName;
 
@@ -66,7 +67,7 @@ namespace WannaApp.Excel.Extensions
             var rowAbsoluteIndex = topLeft.Row;
             var columnsWide = data.HeaderValues.Length;
             var rowsHeight = data.DataValues.GetLength(yLengthIndex);
-            Range bottomRight = topLeft.Worksheet.Cells[rowAbsoluteIndex + rowsHeight + NumberOfHeaders -1, columnAbsoluteIndex + columnsWide - 1]; //  -1 reason one base
+            Range bottomRight = topLeft.Worksheet.Cells[rowAbsoluteIndex + rowsHeight + NumberOfHeaders - 1, columnAbsoluteIndex + columnsWide - 1]; //  -1 reason one base
             return new ExcelRange(topLeft.Worksheet.get_Range(topLeft, bottomRight));
         }
 
@@ -76,22 +77,22 @@ namespace WannaApp.Excel.Extensions
             Range topLeft = range.GetLeftTopCell().GetInteropVersion();
             var columnAbsoluteIndex = topLeft.Column;
             var rowAbsoluteIndex = topLeft.Row;
-            var columnsWide = rangeInteropVersion.Columns.Count + extendColumns ;
+            var columnsWide = rangeInteropVersion.Columns.Count + extendColumns;
             var rowsHeight = rangeInteropVersion.Rows.Count + extendRows;
-            Range bottomRight = topLeft.Worksheet.Cells[rowAbsoluteIndex + rowsHeight  - 1, columnAbsoluteIndex + columnsWide - 1]; //  -1 reason one base
+            Range bottomRight = topLeft.Worksheet.Cells[rowAbsoluteIndex + rowsHeight - 1, columnAbsoluteIndex + columnsWide - 1]; //  -1 reason one base
             return new ExcelRange(topLeft.Worksheet.get_Range(topLeft, bottomRight));
         }
 
         private static bool isRangeSizeValid(ExcelRange range, IListObjectDataObject data)
         {
-           return isRangeSizeValid(range,data.AllValues);
+            return isRangeSizeValid(range, data.AllValues);
         }
 
-         private static bool isRangeSizeValid(ExcelRange range, object[,] data)
+        private static bool isRangeSizeValid(ExcelRange range, object[,] data)
         {
             var internalRange = range.GetInteropVersion();
 
-            return (internalRange.Columns.Count == data.GetLength(xLengthIndex) && internalRange.Rows.Count == data.GetLength(yLengthIndex) + NumberOfHeaders); 
+            return (internalRange.Columns.Count == data.GetLength(xLengthIndex) && internalRange.Rows.Count == data.GetLength(yLengthIndex) + NumberOfHeaders);
         }
 
         private static ExcelRange GetBottomRightCell(this ExcelRange range)
@@ -103,14 +104,14 @@ namespace WannaApp.Excel.Extensions
 
         public static ExcelRange GetLeftTopCell(this ExcelRange range)
         {
-             return new ExcelRange(range.GetInteropVersion().Cells[1,1]);
+            return new ExcelRange(range.GetInteropVersion().Cells[1, 1]);
         }
 
         public static object[,] ValuesAsArray(this ExcelRange range)
         {
             return range.GetInteropVersion().Value2;
         }
-        
+
         public static ExcelRange Merge(this ExcelRange range)
         {
             range.GetInteropVersion().Merge(false);
@@ -123,7 +124,7 @@ namespace WannaApp.Excel.Extensions
             return range;
         }
 
-        public static ExcelRange FontStyling(this ExcelRange range,Microsoft.Office.Interop.Excel.Font fontStyle)
+        public static ExcelRange FontStyling(this ExcelRange range, Microsoft.Office.Interop.Excel.Font fontStyle)
         {
             range.GetInteropVersion().Font.FontStyle = fontStyle;
             return range;
@@ -182,7 +183,7 @@ namespace WannaApp.Excel.Extensions
             return range;
         }
 
-        public static ExcelRange Validation(this ExcelRange range, 
+        public static ExcelRange Validation(this ExcelRange range,
                                string validationFormula,
                                string errorTitle,
                                string errorText
@@ -212,45 +213,57 @@ namespace WannaApp.Excel.Extensions
                                    )
         {
             return range.Validation(validationFormula, string.Empty, string.Empty);
-            
+
         }
 
-       public static ExcelRange Validation(this ExcelRange range,
-                          ExcelRange validValues)
+        public static ExcelRange Validation(this ExcelRange range,
+                           ExcelRange validValues)
         {
-           return range.Validation(validValues, string.Empty, string.Empty);
+            return range.Validation(validValues, string.Empty, string.Empty);
         }
 
-       public static ExcelRange Validation(this ExcelRange range,
-                             ExcelRange validValues,
-                             string errorTitle,
-                             string errorText
-                                      )
-       {
-          return range.Validation(String.Format("={0}", 
-                validValues.GetInteropVersion().get_Address()),
-                errorTitle,
-                errorText);
+        public static ExcelRange Validation(this ExcelRange range,
+                              ExcelRange validValues,
+                              string errorTitle,
+                              string errorText
+                                       )
+        {
+            return range.Validation(String.Format("={0}",
+                  validValues.GetInteropVersion().get_Address()),
+                  errorTitle,
+                  errorText);
+        }
+
+        public static ExcelRange WriteValuesVertically(this ExcelRange range, List<string> values)
+        {
+            var data = new object[values.Count, 1];
+            var extendedRange = range.ExtendRangeSize(values.Count - 1, 0);
+            values.ForEach(v => data[values.IndexOf(v), 0] = v);
+            return extendedRange.SetValue(data);
+        }
+
+        public static ExcelRange WriteValuesHorizontally(this ExcelRange range, List<string> values)
+        {
+            var data = new object[1, values.Count];
+            var extendedRange = range.ExtendRangeSize(0, values.Count - 1);
+            values.ForEach(v => data[0, values.IndexOf(v)] = v);
+            return extendedRange.SetValue(data);
+        }
+
+        public static ExcelRange GetColumnsFromRange(this ExcelRange range, int startcolumn, int endColumn)
+        {
+            var startrange = range.GetLeftTopCell().GetSingleCellByOffset(0, startcolumn - 1);
+            return startrange.ExtendRangeSize(range.GetInteropVersion().Rows.Count -1, endColumn - startcolumn);
+        }
+
+
+        public static ExcelRange GetSingleCellByOffset(this ExcelRange range, int rowOffset, int columnOffset)
+       {    
+           var rangeInteropVersion = range.GetInteropVersion();
+            var currentRow = rangeInteropVersion.Row;
+            var currentColumn = rangeInteropVersion.Column;
+            return new ExcelRange(rangeInteropVersion.Worksheet.Cells[currentRow + rowOffset, currentColumn + columnOffset]);
        }
-
-       public static ExcelRange WriteValuesVertically(this ExcelRange range, List<string> values)
-    {
-        var data = new object[values.Count,1];
-        var extendedRange = range.ExtendRangeSize(values.Count-1, 0);
-        values.ForEach(v => data[values.IndexOf(v),0] = v);
-        return    extendedRange.SetValue(data);
-    }
-
-       public static ExcelRange WriteValuesHorizontally(this ExcelRange range, List<string> values)
-       {
-           var data = new object[1,values.Count];
-           var extendedRange = range.ExtendRangeSize(0, values.Count - 1 );
-           values.ForEach(v => data[0, values.IndexOf(v)] = v);
-           return extendedRange.SetValue(data);
-       }
-
-      
-
 
     }
 }
