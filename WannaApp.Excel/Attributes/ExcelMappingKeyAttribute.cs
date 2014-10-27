@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WannaApp.Excel.Helpers
+namespace WannaApp.Excel.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false)]
-    public class ExcelMappingIgnoreAttribute : Attribute
+    public class ExcelMappingKeyAttribute : Attribute
     {
-        // Empty
     }
 }

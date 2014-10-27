@@ -8,6 +8,7 @@ using WannaApp.Excel.ExcelObjects;
 using WannaApp.Excel.Extensions;
 using System.Drawing;
 using WannaApp.Excel.Helpers;
+using WannaApp.Excel.Helpers.MappingHelpers;
 
 namespace WannaApp.ExcelDemoAddIn
 {
@@ -182,8 +183,9 @@ namespace WannaApp.ExcelDemoAddIn
 
         private static TransferHelper<Models.BaseModel> GetHelperForBaseModel()
         {
-            var helper = new Excel.Helpers.TransferHelper<Models.BaseModel>()
-               .SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" })
+            var helper = new WannaApp  
+                Helpers.MappingHelpers.TransferHelper<Models.BaseModel>()
+               .SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans","demo", "Geert" })
                .SetDynamicColumnsFor("DynamicInts", new List<string> { "Eerste", "Tweede" });
             return helper;
         }

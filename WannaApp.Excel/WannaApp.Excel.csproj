@@ -54,6 +54,7 @@
     <Compile Include="DataObjects\test.cs" />
     <Compile Include="ExcelObjects\ExcelApplication.cs" />
     <Compile Include="ExcelObjects\ExcelBaseObject.cs" />
+    <Compile Include="ExcelObjects\ExcelConditionalFormatting.cs" />
     <Compile Include="ExcelObjects\ExcelListObject.cs" />
     <Compile Include="ExcelObjects\ExcelListObjectDataRange.cs" />
     <Compile Include="ExcelObjects\ExcelRange.cs" />
@@ -67,16 +68,17 @@
     <Compile Include="Extensions\ExcelRangeExtensions.cs" />
     <Compile Include="Extensions\ExcelWorkbookExtensions.cs" />
     <Compile Include="Extensions\ExcelWorksheetExtensions.cs" />
-    <Compile Include="Helpers\ExcelToObjectConverter.cs" />
-    <Compile Include="Helpers\ExcelToObjectMappingHelper.cs" />
-    <Compile Include="Helpers\HeadersMappingInfo.cs" />
-    <Compile Include="Helpers\TransferHelper.cs" />
-    <Compile Include="Helpers\MappingInfo.cs" />
-    <Compile Include="Helpers\MappingInfoManager.cs" />
-    <Compile Include="Helpers\ExcelMappingIgnoreAttribute.cs" />
-    <Compile Include="Helpers\ExcelMappingKeyAttribute.cs" />
-    <Compile Include="Helpers\ExcelMappingNameAttribute.cs" />
+    <Compile Include="Helpers\MappingHelpers\ExcelToObjectConverter.cs" />
+    <Compile Include="Helpers\MappingHelpers\ExcelToObjectMappingHelper.cs" />
+    <Compile Include="Helpers\MappingHelpers\HeadersMappingInfo.cs" />
+    <Compile Include="Helpers\MappingHelpers\TransferHelper.cs" />
+    <Compile Include="Helpers\MappingHelpers\MappingInfo.cs" />
+    <Compile Include="Helpers\MappingHelpers\MappingInfoManager.cs" />
+    <Compile Include="Attributes\ExcelMappingIgnoreAttribute.cs" />
+    <Compile Include="Attributes\ExcelMappingKeyAttribute.cs" />
+    <Compile Include="Attributes\ExcelMappingNameAttribute.cs" />
     <Compile Include="Helpers\ResourceHelper.cs" />
+    <Compile Include="Helpers\ApplicationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataObjects\ListObjectDataObject.cs" />
   </ItemGroup>

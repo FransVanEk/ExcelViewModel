@@ -49,9 +49,17 @@ namespace WannaApp.Excel.Extensions
             return worksheet.CreateListObject(worksheet.GetRange(leftTopTargetCellAddress), data,listObjectName);
         }
 
-        public static ExcelRange GetRange(this ExcelWorksheet worksheet, string Address)
+        public static ExcelRange GetRange(this ExcelWorksheet worksheet, string address)
         {
-            return new ExcelRange(worksheet.GetInteropVersion().Range[Address]);
+            return new ExcelRange(worksheet.GetInteropVersion().Range[address]);
+        }
+
+        public static ExcelRange GetRange(this ExcelWorksheet worksheet, string startAddress, string endAddress)
+        {
+            var startAddressRange = worksheet.GetRange(startAddress);
+            var endAddressRange = worksheet.GetRange(endAddress);
+
+            return new ExcelRange(worksheet.GetInteropVersion().get_Range(startAddressRange.GetInteropVersion(),endAddressRange.GetInteropVersion()));
         }
 
         public static ExcelListObject GetListObjectByName(this ExcelWorksheet worksheet, string ListObjectName)

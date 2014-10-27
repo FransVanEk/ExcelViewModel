@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using WannaApp.Excel.Attributes;
 
-namespace WannaApp.Excel.Helpers
+namespace WannaApp.Excel.Helpers.MappingHelpers
 {
     internal class MappingInfoManager<T>
     {

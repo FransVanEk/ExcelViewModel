@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WannaApp.Excel.Helpers.MappingHelpers;
 
-namespace WannaApp.Excel.Helpers
+namespace WannaApp.Excel.Helpers.MappingHelpers
 {
     public class ExcelToObjectMappingHelper
     {

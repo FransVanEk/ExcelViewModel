@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace WannaApp.Excel.Helpers
+namespace WannaApp.Excel.Helpers.MappingHelpers
 {
     internal class ExcelToObjectConverter<T>
     {

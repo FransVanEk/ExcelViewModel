@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using WannaApp.Excel.DataObjects;
 using WannaApp.Excel.ExcelObjects;
 
-namespace WannaApp.Excel.Helpers
+
+namespace WannaApp.Excel.Helpers.MappingHelpers
 {
     public class TransferHelper<T> : IListObjectDataObject where T : class
     {

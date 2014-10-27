@@ -8,6 +8,8 @@ using WannaApp.Excel.Extensions;
 using WannaApp.Excel.DataObjects;
 using WannaApp.Excel.Helpers;
 using System.Collections.Generic;
+using WannaApp.Excel.Helpers.MappingHelpers;
+
 
 namespace WannaApp.ExcelViewModelTests
 {
@@ -94,14 +96,14 @@ namespace WannaApp.ExcelViewModelTests
         [TestMethod]
         public void MappingManagerTest()
         {
-            var manager = new Excel.Helpers.TransferHelper<TestObjecten.NewTestObject>().SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" });
+            var manager = new WannaApp.Excel.Helpers.MappingHelpers.TransferHelper<TestObjecten.NewTestObject>().SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" });
             Assert.AreNotEqual(null, manager.HeaderValues);
         }
 
         [TestMethod]
         public void MappingManagerTestWithData()
         {
-            var manager = new Excel.Helpers.TransferHelper<TestObjecten.NewTestObject>().SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" });
+            var manager = new WannaApp.Excel.Helpers.MappingHelpers.TransferHelper<TestObjecten.NewTestObject>().SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" });
             manager.TransferToExcelFormat(GetTestDataNewTestObjects());
             
 
@@ -117,7 +119,7 @@ namespace WannaApp.ExcelViewModelTests
             var excel = StartExcel();
             var test = new ExcelApplication(excel);
             var workbook = test.AddNewWorkbook();
-            var helper = new Excel.Helpers.TransferHelper<TestObjecten.NewTestObject>()
+            var helper = new WannaApp.Excel.Helpers.MappingHelpers.TransferHelper<TestObjecten.NewTestObject>()
                 .SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" })
                 .TransferToExcelFormat(GetTestDataNewTestObjects());
    
@@ -136,7 +138,7 @@ namespace WannaApp.ExcelViewModelTests
         public void HeaderMappinginfoTest()
         {
             var helper = new ExcelToObjectMappingHelper();
-            var transferHelper = new Excel.Helpers.TransferHelper<TestObjecten.NewTestObject>()
+            var transferHelper = new WannaApp.Excel.Helpers.MappingHelpers.TransferHelper<TestObjecten.NewTestObject>()
                 .SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" });
             var result = helper.Process(new string[] { "Eerste Sleutel", "Tweede sleutel", "Tekst", "Getal", "Datum", "Decimaal", "frans", "Geert" ,"DynamicInts" }, transferHelper.MappingInfoToExcel);
           

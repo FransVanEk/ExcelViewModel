@@ -59,6 +59,18 @@ namespace WannaApp.Excel.Extensions
             return new ExcelRange(topLeft.Worksheet.get_Range(topLeft, bottomRight));
         }
 
+        private static ExcelRange AdjustRangeSize(this ExcelRange range, int extendRows, int extendColumns)
+        {
+            var rangeInteropVersion = range.GetInteropVersion();
+            Range topLeft = range.GetLeftTopCell().GetInteropVersion();
+            var columnAbsoluteIndex = topLeft.Column;
+            var rowAbsoluteIndex = topLeft.Row;
+            var columnsWide = rangeInteropVersion.Columns.Count + extendColumns ;
+            var rowsHeight = rangeInteropVersion.Rows.Count + extendRows;
+            Range bottomRight = topLeft.Worksheet.Cells[rowAbsoluteIndex + rowsHeight  - 1, columnAbsoluteIndex + columnsWide - 1]; //  -1 reason one base
+            return new ExcelRange(topLeft.Worksheet.get_Range(topLeft, bottomRight));
+        }
+
         private static bool isRangeSizeValid(ExcelRange range, IListObjectDataObject data)
         {
             var internalRange = range.GetInteropVersion();
@@ -154,6 +166,66 @@ namespace WannaApp.Excel.Extensions
             return range;
         }
 
-    
+        public static ExcelRange Validation(this ExcelRange range, 
+                               string validationFormula,
+                               string errorTitle,
+                               string errorText
+                                        )
+        {
+            var interopRange = range.GetInteropVersion();
+
+            interopRange.Validation.Delete();
+            interopRange.Validation.Add(
+                XlDVType.xlValidateList,
+                XlDVAlertStyle.xlValidAlertInformation,
+                XlFormatConditionOperator.xlBetween,
+                validationFormula,
+                Type.Missing);
+
+            interopRange.Validation.IgnoreBlank = true;
+            interopRange.Validation.ErrorMessage = string.IsNullOrEmpty(errorText) ? string.Empty : errorText;
+            interopRange.Validation.ErrorTitle = string.IsNullOrEmpty(errorTitle) ? "Error" : errorTitle;
+            interopRange.Validation.InCellDropdown = true;
+            interopRange.Validation.ShowError = string.IsNullOrEmpty(errorText);
+
+            return range;
+        }
+
+        public static ExcelRange Validation(this ExcelRange range,
+                          string validationFormula
+                                   )
+        {
+            return range.Validation(validationFormula, string.Empty, string.Empty);
+            
+        }
+
+       public static ExcelRange Validation(this ExcelRange range,
+                          ExcelRange validValues)
+        {
+           return range.Validation(validValues, string.Empty, string.Empty);
+        }
+
+       public static ExcelRange Validation(this ExcelRange range,
+                             ExcelRange validValues,
+                             string errorTitle,
+                             string errorText
+                                      )
+       {
+          return range.Validation(String.Format("={0}", 
+                validValues.GetInteropVersion().get_Address()),
+                errorTitle,
+                errorText);
+       }
+
+       public static ExcelRange WriteValuesVertically(this ExcelRange range, List<string> values)
+    {
+        var data = new object[values.Count,1];
+        var extendedRange = range.AdjustRangeSize(values.Count-1, 0);
+        values.ForEach(v => data[values.IndexOf(v),0] = v);
+        return    extendedRange.SetValue(data);
+    }
+
+
+
     }
 }

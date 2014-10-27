@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace WannaApp.Excel.Helpers
+namespace WannaApp.Excel.Helpers.MappingHelpers
 {
     public class MappingInfo
     {
