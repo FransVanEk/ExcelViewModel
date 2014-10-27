@@ -14,19 +14,30 @@ namespace WannaApp.Excel.Extensions
     {
 
         const int NumberOfHeaders = 1;
-        const int xLengthIndex = 0;
-        const int yLengthIndex = 1;
+        const int xLengthIndex = 1;
+        const int yLengthIndex = 0;
 
         public static ExcelListObject CreateListObject(this ExcelRange range, IListObjectDataObject data, string listObjectName)
         {
-            var workingRange = range;
-            if (isRangeSizeValid(workingRange,data) == false)
-            {
-               workingRange =  range.AdjustRangeSize(data);
-            }
-            workingRange.WriteData(data);
+            var workingRange = range.WriteData(data.AllValues);
             return workingRange.ConvertIntoTable(listObjectName);
         }
+
+        public static ExcelRange WriteData(this ExcelRange range, object[,] data)
+        {
+            var result = range;
+            if(isRangeSizeValid(range,data) == false) {
+                result = range.GetRangeForSize(data.GetLength(yLengthIndex), data.GetLength(xLengthIndex));
+            } 
+            result.SetValue(data);
+            return result;
+        }
+
+        public static ExcelRange GetRangeForSize(this ExcelRange range, int numberOrRows, int numberOfColumns)
+    {
+        Range topLeft = range.GetLeftTopCell().GetInteropVersion();
+        return range.ExtendRangeSize(numberOrRows-1, numberOfColumns-1);
+    }
 
         public static ExcelRange WriteData(this ExcelRange range,IListObjectDataObject data)
         {
@@ -54,12 +65,12 @@ namespace WannaApp.Excel.Extensions
             var columnAbsoluteIndex = topLeft.Column;
             var rowAbsoluteIndex = topLeft.Row;
             var columnsWide = data.HeaderValues.Length;
-            var rowsHeight = data.DataValues.GetLength(xLengthIndex);
+            var rowsHeight = data.DataValues.GetLength(yLengthIndex);
             Range bottomRight = topLeft.Worksheet.Cells[rowAbsoluteIndex + rowsHeight + NumberOfHeaders -1, columnAbsoluteIndex + columnsWide - 1]; //  -1 reason one base
             return new ExcelRange(topLeft.Worksheet.get_Range(topLeft, bottomRight));
         }
 
-        private static ExcelRange AdjustRangeSize(this ExcelRange range, int extendRows, int extendColumns)
+        private static ExcelRange ExtendRangeSize(this ExcelRange range, int extendRows, int extendColumns)
         {
             var rangeInteropVersion = range.GetInteropVersion();
             Range topLeft = range.GetLeftTopCell().GetInteropVersion();
@@ -73,9 +84,14 @@ namespace WannaApp.Excel.Extensions
 
         private static bool isRangeSizeValid(ExcelRange range, IListObjectDataObject data)
         {
+           return isRangeSizeValid(range,data.AllValues);
+        }
+
+         private static bool isRangeSizeValid(ExcelRange range, object[,] data)
+        {
             var internalRange = range.GetInteropVersion();
 
-            return (internalRange.Columns.Count == data.HeaderValues.Length && internalRange.Rows.Count == data.DataValues.GetLength(yLengthIndex) + NumberOfHeaders); 
+            return (internalRange.Columns.Count == data.GetLength(xLengthIndex) && internalRange.Rows.Count == data.GetLength(yLengthIndex) + NumberOfHeaders); 
         }
 
         private static ExcelRange GetBottomRightCell(this ExcelRange range)
@@ -220,11 +236,20 @@ namespace WannaApp.Excel.Extensions
        public static ExcelRange WriteValuesVertically(this ExcelRange range, List<string> values)
     {
         var data = new object[values.Count,1];
-        var extendedRange = range.AdjustRangeSize(values.Count-1, 0);
+        var extendedRange = range.ExtendRangeSize(values.Count-1, 0);
         values.ForEach(v => data[values.IndexOf(v),0] = v);
         return    extendedRange.SetValue(data);
     }
 
+       public static ExcelRange WriteValuesHorizontally(this ExcelRange range, List<string> values)
+       {
+           var data = new object[1,values.Count];
+           var extendedRange = range.ExtendRangeSize(0, values.Count - 1 );
+           values.ForEach(v => data[0, values.IndexOf(v)] = v);
+           return extendedRange.SetValue(data);
+       }
+
+      
 
 
     }

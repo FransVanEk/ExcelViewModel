@@ -33,17 +33,25 @@ namespace WannaApp.Excel.DemoAdd_in
         {
             var result = new ListObjectDataObject();
             result.HeaderValues = new string[] { "a", "b", "c", "d" };
-            result.DataValues = new object[100,4];
+            result.DataValues = GetDataValues();
+            return result;
+        }
+
+        private object[,] GetDataValues()
+        {
+            var result = new object[100, 4];
 
             for (int i = 0; i < 100; i++)
             {
                 var currentItem = new List<string>();
                 for (int y = 0; y < 4; y++)
                 {
-                    result.DataValues[i,y] = ((int)y+i).ToString();
+                    result[i, y] = ((int)y + i).ToString();
                 }
             }
+
             return result;
+
         }
 
         private void btn_LoadObjectDataIntoExcel_Click(object sender, RibbonControlEventArgs e)
@@ -98,6 +106,9 @@ namespace WannaApp.Excel.DemoAdd_in
             var workbook = new ExcelWorkbook(Globals.ThisAddIn.Application.ActiveWorkbook);
             var worksheet = workbook.FindOrCreateWorksheet("Validations");
             var validValuesRange = worksheet.GetRange("A1").WriteValuesVertically(new List<string> { "Yes","No","Sometimes"});
+            var validValuesRange2 = worksheet.GetRange("A10").WriteValuesHorizontally(new List<string> { "Yes", "No", "Sometimes" });
+            var validValuesRange3 = worksheet.GetRange("D10").WriteData(GetDataValues());
+
 
             worksheet.GetRange("B1").Validation("=A1:A3");
             worksheet.GetRange("C1").Validation(validValuesRange);
