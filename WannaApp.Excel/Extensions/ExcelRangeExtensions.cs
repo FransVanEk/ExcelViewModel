@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using WannaApp.Excel.DataObjects;
 using WannaApp.Excel.ExcelObjects;
+using System.Runtime.Remoting;
 
 namespace WannaApp.Excel.Extensions
 {
@@ -109,7 +110,17 @@ namespace WannaApp.Excel.Extensions
 
         public static object[,] ValuesAsArray(this ExcelRange range)
         {
-            return range.GetInteropVersion().Value2;
+            if (range.GetInteropVersion().Cells.Count == 1)
+            {
+                var result = new Object[2, 2];
+                result[1, 1] = range.GetInteropVersion().Value2;
+                return result;
+            }
+            else
+            {
+                return range.GetInteropVersion().Value2;
+            }
+
         }
 
         public static ExcelRange Merge(this ExcelRange range)
@@ -228,8 +239,9 @@ namespace WannaApp.Excel.Extensions
                               string errorText
                                        )
         {
-            return range.Validation(String.Format("={0}",
-                  validValues.GetInteropVersion().get_Address()),
+            return range.Validation(String.Format("='{0}'!{1}",
+                  validValues.GetInteropVersion().Worksheet.Name,
+                  validValues.GetInteropVersion().get_AddressLocal()),
                   errorTitle,
                   errorText);
         }
@@ -253,17 +265,17 @@ namespace WannaApp.Excel.Extensions
         public static ExcelRange GetColumnsFromRange(this ExcelRange range, int startcolumn, int endColumn)
         {
             var startrange = range.GetLeftTopCell().GetSingleCellByOffset(0, startcolumn - 1);
-            return startrange.ExtendRangeSize(range.GetInteropVersion().Rows.Count -1, endColumn - startcolumn);
+            return startrange.ExtendRangeSize(range.GetInteropVersion().Rows.Count - 1, endColumn - startcolumn);
         }
 
 
         public static ExcelRange GetSingleCellByOffset(this ExcelRange range, int rowOffset, int columnOffset)
-       {    
-           var rangeInteropVersion = range.GetInteropVersion();
+        {
+            var rangeInteropVersion = range.GetInteropVersion();
             var currentRow = rangeInteropVersion.Row;
             var currentColumn = rangeInteropVersion.Column;
             return new ExcelRange(rangeInteropVersion.Worksheet.Cells[currentRow + rowOffset, currentColumn + columnOffset]);
-       }
+        }
 
     }
 }

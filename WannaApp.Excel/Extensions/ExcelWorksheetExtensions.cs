@@ -62,6 +62,21 @@ namespace WannaApp.Excel.Extensions
             return new ExcelRange(worksheet.GetInteropVersion().get_Range(startAddressRange.GetInteropVersion(),endAddressRange.GetInteropVersion()));
         }
 
+        public static bool ContainsListObjectByName(this ExcelWorksheet worksheet,string ListObjectName)
+        {
+            try
+            {
+                var result = worksheet.GetInteropVersion().ListObjects[ListObjectName];
+                return result != null;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+           
+        }
+
         public static ExcelListObject GetListObjectByName(this ExcelWorksheet worksheet, string ListObjectName)
         {
             return new ExcelListObject(worksheet.GetInteropVersion().ListObjects[ListObjectName]);

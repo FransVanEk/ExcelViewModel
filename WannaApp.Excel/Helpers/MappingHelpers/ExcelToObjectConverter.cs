@@ -83,11 +83,54 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
             {
                 prop.SetValue(CurrentInstance, DateTime.FromOADate((double)Convert.ChangeType(value, typeof(double))), null);
             }
+            else if (prop.PropertyType == typeof(Guid))
+            {
+                prop.SetValue(CurrentInstance, Guid.Parse((string)value));
+            }
             else
             {
-                prop.SetValue(CurrentInstance, Convert.ChangeType(value, prop.PropertyType), null);
+     
+                //prop.SetValue(CurrentInstance, Convert.ChangeType(value, prop.PropertyType), null);
+                SetValue(prop, value);
             }
         }
+
+        private void SetValue(PropertyInfo prop, object value)
+        {
+            var t = prop.PropertyType;
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null)
+                {
+                    prop.SetValue(CurrentInstance,default(T));
+                    return;
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+            
+            prop.SetValue(CurrentInstance,Convert.ChangeType(value, t));
+        }
+
+        public static T ChangeType<T>(object value)
+        {
+            var t = typeof(T);
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null)
+                {
+                    return default(T);
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return (T)Convert.ChangeType(value, t);
+        }
+
+
 
         private PropertyInfo GetPropertyInfo(HeadersMappingInfo mapping)
         {

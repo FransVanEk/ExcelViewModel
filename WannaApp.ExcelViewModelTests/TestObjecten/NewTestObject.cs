@@ -37,5 +37,7 @@ namespace WannaApp.ExcelViewModelTests.TestObjecten
        
         public List<int> DynamicInts { get; set; }
 
+        public Guid Guid { get; set;}
+
     }
 }

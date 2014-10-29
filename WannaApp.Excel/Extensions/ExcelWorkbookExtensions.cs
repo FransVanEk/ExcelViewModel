@@ -61,7 +61,20 @@ namespace WannaApp.Excel.Extensions
             return workbook;
         }
 
+        public static ExcelListObject GetListObjectByName(this ExcelWorkbook workbook, string listname)
+        {
+            ExcelListObject result = null;
+ 
 
+            workbook.GetWorksheets().ForEach(ws => {
+                if (result == null && ws.ContainsListObjectByName(listname)) {
+                    var list = ws.GetListObjectByName(listname);
+                    if (list != null) { result = list; }
+                }
+        });
+
+            return result;
+        }
 
     }
 }

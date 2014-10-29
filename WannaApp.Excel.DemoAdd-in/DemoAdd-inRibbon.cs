@@ -117,10 +117,16 @@ namespace WannaApp.Excel.DemoAdd_in
             
             worksheet.GetRange("B1").Validation("=A1:A3");
             worksheet.GetRange("C1").Validation(validValuesRange);
+
+           worksheet
+                .GetRange("Z1")
+                .WriteValuesVertically(new List<string> {"Options", "TRUE", "False" }).ConvertIntoTable("OptionsTrueFalse");
+
+
+           var validitemsTrueFalse = workbook.GetListObjectByName("OptionsTrueFalse").GetDataRangeFor("Options");
+           worksheet.GetRange("X1").Validation(validitemsTrueFalse);
+
         }
-
-       
-
 
 
 

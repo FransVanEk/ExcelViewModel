@@ -29,7 +29,15 @@ namespace WannaApp.Excel.Extensions
 
         public static ExcelListObjectDataRange GetDataRange(this ExcelListObject list)
         {
-            return new ExcelListObjectDataRange(list.GetInteropVersion().DataBodyRange);
+            var interopObject = list.GetInteropVersion();
+            if (interopObject.DataBodyRange == null) {
+                return new ExcelListObjectDataRange(interopObject.InsertRowRange);
+            }
+            else
+            {
+                return new ExcelListObjectDataRange(interopObject.DataBodyRange);
+            }
+            
         }
 
         public static IListObjectDataObject GetData(this ExcelListObject list)

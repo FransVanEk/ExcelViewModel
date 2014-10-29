@@ -124,7 +124,7 @@ namespace WannaApp.ExcelViewModelTests
                 .TransferToExcelFormat(GetTestDataNewTestObjects());
    
             var list = workbook.FindOrCreateWorksheet("frans").CreateListObject("A1", helper, "eerste");
-            var retrievedList =  workbook.FindOrCreateWorksheet("frans").GetListObjectByName("eerste");
+            var retrievedList =  workbook.GetListObjectByName("eerste");
 
             var retrieveddata =  helper.TransferFromExcelFormat(retrievedList).GetObjectsFromExcel();
             workbook.SaveAsWorkbook(@"c:\temp\test.xlsx");
@@ -132,6 +132,29 @@ namespace WannaApp.ExcelViewModelTests
            
             Assert.AreNotEqual(null, list);
 
+        }
+
+        [TestMethod]
+        public void WorkBookWorkSheetContainesListObject()
+        {
+            var excel = StartExcel();
+            var test = new ExcelApplication(excel);
+            var workbook = test.AddNewWorkbook();
+            var helper = new WannaApp.Excel.Helpers.MappingHelpers.TransferHelper<TestObjecten.NewTestObject>()
+                .SetDynamicColumnsFor("DynamicStrings", new List<string> { "frans", "Geert" })
+                .TransferToExcelFormat(GetTestDataNewTestObjects());
+            var worksheet = workbook.FindOrCreateWorksheet("frans");
+            var list = worksheet.CreateListObject("A1", helper, "ListObjectName");
+            var found = worksheet.ContainsListObjectByName("ListObjectName");
+            var notFound = worksheet.ContainsListObjectByName("noExistingListName");
+            var workbookFound = workbook.GetListObjectByName("ListObjectName");
+            var workbookNotFound =   workbook.GetListObjectByName("noExistingListName"); 
+            excel.Quit();
+
+            Assert.AreEqual(true, found);
+            Assert.AreEqual(false,notFound);
+            Assert.AreNotEqual(null, workbookFound);
+            Assert.AreEqual(null, workbookNotFound);
         }
 
         [TestMethod]
@@ -153,24 +176,24 @@ namespace WannaApp.ExcelViewModelTests
         private IEnumerable<TestObjecten.NewTestObject> GetTestDataNewTestObjects()
         {
             var result = new List<TestObjecten.NewTestObject>();
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" } });
-            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" } });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.5, FirstKey = 1, Ignore = false, Int = 1, SecondKey = "tweede", String = "string", DynamicStrings = new List<string> { "ja", "nee" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.6, FirstKey = 2, Ignore = false, Int = 2, SecondKey = "vierde", String = "string1", DynamicStrings = new List<string> { "soms", "af en toe" }, Guid = Guid.NewGuid() });
+            result.Add(new TestObjecten.NewTestObject { DateTime = DateTime.Now, Double = 1.7, FirstKey = 3, Ignore = true, Int = 3, SecondKey = "achtste", String = "string2", DynamicStrings = new List<string> { "nooit", "altijd" }, Guid = Guid.NewGuid() });
 
             return result;
         }

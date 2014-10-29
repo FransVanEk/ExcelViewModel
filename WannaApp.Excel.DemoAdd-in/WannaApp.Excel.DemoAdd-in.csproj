@@ -200,6 +200,10 @@
     <None Include="WannaApp.Excel.DemoAdd-in_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WannaApp.ExcelManagers\WannaApp.ExcelManagers.csproj">
+      <Project>{91753b24-6647-44b9-8add-a61fdf70908d}</Project>
+      <Name>WannaApp.ExcelManagers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WannaApp.Excel\WannaApp.Excel.csproj">
       <Project>{7df7a4ea-2662-4a75-a747-b365d544f4a5}</Project>
       <Name>WannaApp.Excel</Name>
