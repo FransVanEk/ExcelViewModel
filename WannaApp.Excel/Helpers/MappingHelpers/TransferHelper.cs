@@ -124,9 +124,11 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
 
         private object GetValue(MappingInfo mappingInfo, T dataObject)
         {
-            if (mappingInfo.Type == typeof(Guid))
+            if (mappingInfo.Type == typeof(Guid) || mappingInfo.Type == typeof(Guid?))
             {
-                return dataObject.GetType().GetProperty(mappingInfo.PropertyName).GetValue(dataObject, null).ToString();
+                var value = dataObject.GetType().GetProperty(mappingInfo.PropertyName).GetValue(dataObject, null);
+                    if (value==null) { return string.Empty;}
+                    else {return value.ToString();}
             }
             else
             {

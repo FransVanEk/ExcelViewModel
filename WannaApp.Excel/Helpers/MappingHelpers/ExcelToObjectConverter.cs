@@ -41,7 +41,7 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
             CurrentInstance = newItem;
             FillValuesForCurrentRow();
             convertedObjects.Add(newItem);
-            
+
         }
 
         private void FillValuesForCurrentRow()
@@ -83,13 +83,21 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
             {
                 prop.SetValue(CurrentInstance, DateTime.FromOADate((double)Convert.ChangeType(value, typeof(double))), null);
             }
-            else if (prop.PropertyType == typeof(Guid))
+            else if (prop.PropertyType == typeof(Guid) || prop.PropertyType == typeof(Guid?))
             {
-                prop.SetValue(CurrentInstance, Guid.Parse((string)value));
+                string strvalue = (string)value;
+                if (string.IsNullOrWhiteSpace(strvalue))
+                {
+                    prop.SetValue(CurrentInstance, null);
+                }
+                else
+                {
+                    prop.SetValue(CurrentInstance, Guid.Parse(strvalue));
+                }
             }
             else
             {
-     
+
                 //prop.SetValue(CurrentInstance, Convert.ChangeType(value, prop.PropertyType), null);
                 SetValue(prop, value);
             }
@@ -103,14 +111,14 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
             {
                 if (value == null)
                 {
-                    prop.SetValue(CurrentInstance,default(T));
+                    prop.SetValue(CurrentInstance, default(T));
                     return;
                 }
 
                 t = Nullable.GetUnderlyingType(t);
             }
-            
-            prop.SetValue(CurrentInstance,Convert.ChangeType(value, t));
+
+            prop.SetValue(CurrentInstance, Convert.ChangeType(value, t));
         }
 
         public static T ChangeType<T>(object value)
@@ -130,8 +138,6 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
             return (T)Convert.ChangeType(value, t);
         }
 
-
-
         private PropertyInfo GetPropertyInfo(HeadersMappingInfo mapping)
         {
             return processingType.GetProperty(mapping.PropertyName);
@@ -139,7 +145,7 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
 
         private object GetValueFromDataArray(HeadersMappingInfo mapping)
         {
-            return currentdata[currentRowIndex, mapping.ColumnIndex+1];
+            return currentdata[currentRowIndex, mapping.ColumnIndex + 1];
         }
 
         private T getNewInstance()
@@ -159,11 +165,11 @@ namespace WannaApp.Excel.Helpers.MappingHelpers
 
         private void InstantiateDynamicRange(T result, System.Reflection.PropertyInfo propertyInfo)
         {
-           var listType = typeof(List<>);
-           var genericArgs = propertyInfo.PropertyType.GetGenericArguments();
-           var concreteType = listType.MakeGenericType(genericArgs);
-           var newList = Activator.CreateInstance(concreteType);
-           propertyInfo.SetValue(result, newList);
+            var listType = typeof(List<>);
+            var genericArgs = propertyInfo.PropertyType.GetGenericArguments();
+            var concreteType = listType.MakeGenericType(genericArgs);
+            var newList = Activator.CreateInstance(concreteType);
+            propertyInfo.SetValue(result, newList);
         }
 
         private IEnumerable<HeadersMappingInfo> GetDynamicRanges()
