@@ -33,7 +33,7 @@ namespace WannaApp.Excel.Extensions
         public static ExcelWorksheet FindOrCreateWorksheet(this ExcelWorkbook workbook, string worksheetName)
         {
             ExcelWorksheet worksheet = workbook.GetWorksheet(worksheetName);
-            if (worksheet == null) { worksheet = workbook.AddNewWorksheet(worksheetName);}
+            if (worksheet == null) { worksheet = workbook.AddNewWorksheet(worksheetName); }
             return worksheet;
         }
 
@@ -55,6 +55,12 @@ namespace WannaApp.Excel.Extensions
             return workbook;
         }
 
+        public static ExcelWorkbook Close(this ExcelWorkbook workbook, bool saveChanges)
+        {
+            workbook.Close(saveChanges);
+            return workbook;
+        }
+
         public static ExcelWorkbook SaveWorkbook(this ExcelWorkbook workbook)
         {
             workbook.GetInteropVersion().Save();
@@ -64,14 +70,16 @@ namespace WannaApp.Excel.Extensions
         public static ExcelListObject GetListObjectByName(this ExcelWorkbook workbook, string listname)
         {
             ExcelListObject result = null;
- 
 
-            workbook.GetWorksheets().ForEach(ws => {
-                if (result == null && ws.ContainsListObjectByName(listname)) {
+
+            workbook.GetWorksheets().ForEach(ws =>
+            {
+                if (result == null && ws.ContainsListObjectByName(listname))
+                {
                     var list = ws.GetListObjectByName(listname);
                     if (list != null) { result = list; }
                 }
-        });
+            });
 
             return result;
         }

@@ -9,6 +9,7 @@ using WannaApp.Excel.DataObjects;
 using WannaApp.Excel.Helpers;
 using System.Collections.Generic;
 using WannaApp.Excel.Helpers.MappingHelpers;
+using System.IO;
 
 
 namespace WannaApp.ExcelViewModelTests
@@ -16,6 +17,7 @@ namespace WannaApp.ExcelViewModelTests
     [TestClass]
     public class ExtentionsTests
     {
+        private string _filename = @"c:\temp\test.xlsx";
         public Application StartExcel()
         {
             iExcel.Application instance = null;
@@ -37,8 +39,9 @@ namespace WannaApp.ExcelViewModelTests
             var excel = StartExcel();
             var test = new ExcelApplication(excel);
             var workbooks = test.GetWorkbooks();
-
+           
             Assert.AreNotEqual(null, workbooks);
+            excel.Quit();
         }
 
         [TestMethod]
@@ -50,6 +53,8 @@ namespace WannaApp.ExcelViewModelTests
             var workbook = test.AddNewWorkbook();
             Assert.AreNotEqual(null, workbook);
             Assert.AreNotEqual(NumberOfworkbooks + 1, test.GetWorkbooks());
+            workbook.Close(false);
+            excel.Quit();
         }
 
         [TestMethod]
@@ -58,27 +63,32 @@ namespace WannaApp.ExcelViewModelTests
             var excel = StartExcel();
             var test = new ExcelApplication(excel);
             var workbook = test.GetLoadedWorkbook("Demo.xls");
+            excel.Quit();
             Assert.AreEqual(null, workbook);
         }
 
         [TestMethod]
         public void WorkBookWorkSheetManipulationsTest()
         {
+            RemoveFile();
             var excel = StartExcel();
             var test = new ExcelApplication(excel);
             var workbook = test.AddNewWorkbook();
             var numberOfSheets = workbook.GetWorksheets().Count;
             var newsheet = workbook.AddNewWorksheet("Test");
             var retrieveNewSheet = workbook.GetWorksheet("Test");
-            workbook.SaveAsWorkbook(@"c:\temp\test.xlsx");
+            workbook.SaveAsWorkbook(_filename);
             Assert.AreEqual(numberOfSheets + 1, workbook.GetWorksheets().Count);
             Assert.AreNotEqual(null, newsheet);
             Assert.AreNotEqual(null, retrieveNewSheet);
+            workbook.Close(false);
+            excel.Quit();
         }
 
         [TestMethod]
         public void WorkBookWorkSheetCreateListObject()
         {
+            RemoveFile();
             var excel = StartExcel();
             var test = new ExcelApplication(excel);
             var workbook = test.AddNewWorkbook();
@@ -86,11 +96,16 @@ namespace WannaApp.ExcelViewModelTests
             var list2 = workbook.FindOrCreateWorksheet("frans").CreateListObject("G1", GetData(), "tweede");
             var list3 = workbook.FindOrCreateWorksheet("fransje").CreateListObject("A1", GetData(), "Derde");
             var newsheet = workbook.GetWorksheet("fransje");
-            workbook.SaveAsWorkbook(@"c:\temp\test.xlsx");
+            workbook.SaveAsWorkbook(_filename);
             excel.Quit();
             Assert.AreNotEqual(null, newsheet);
             Assert.AreNotEqual(null, list);
             
+        }
+
+        private void RemoveFile()
+        {
+            new FileInfo(_filename).Delete();
         }
 
         [TestMethod]
@@ -116,6 +131,7 @@ namespace WannaApp.ExcelViewModelTests
         [TestMethod]
         public void WorkBookWorkSheetCreateListObjectFromObjects()
         {
+            RemoveFile();
             var excel = StartExcel();
             var test = new ExcelApplication(excel);
             var workbook = test.AddNewWorkbook();
@@ -127,7 +143,7 @@ namespace WannaApp.ExcelViewModelTests
             var retrievedList =  workbook.GetListObjectByName("eerste");
 
             var retrieveddata =  helper.TransferFromExcelFormat(retrievedList).GetObjectsFromExcel();
-            workbook.SaveAsWorkbook(@"c:\temp\test.xlsx");
+            workbook.SaveAsWorkbook(_filename);
             excel.Quit();
            
             Assert.AreNotEqual(null, list);
@@ -148,13 +164,14 @@ namespace WannaApp.ExcelViewModelTests
             var found = worksheet.ContainsListObjectByName("ListObjectName");
             var notFound = worksheet.ContainsListObjectByName("noExistingListName");
             var workbookFound = workbook.GetListObjectByName("ListObjectName");
-            var workbookNotFound =   workbook.GetListObjectByName("noExistingListName"); 
-            excel.Quit();
+            var workbookNotFound =   workbook.GetListObjectByName("noExistingListName");
 
             Assert.AreEqual(true, found);
             Assert.AreEqual(false,notFound);
             Assert.AreNotEqual(null, workbookFound);
             Assert.AreEqual(null, workbookNotFound);
+            workbook.Close(false);
+            excel.Quit();
         }
 
         [TestMethod]

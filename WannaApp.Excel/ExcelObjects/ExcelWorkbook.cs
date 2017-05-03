@@ -18,6 +18,13 @@ namespace WannaApp.Excel.ExcelObjects
 
         internal Workbook GetInteropVersion()
         {
+          
+            return this._workbook;
+        }
+
+        internal Workbook Close(bool saveChanges)
+        {
+            this._workbook.Close(saveChanges);
             return this._workbook;
         }
 
